@@ -1,4 +1,4 @@
-package likelion.festival.entity;
+package likelion.festival.entity.menu;
 
 import likelion.festival.entity.booth.Booth;
 import lombok.Getter;
@@ -8,16 +8,19 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
-@Table(name = "likes")
+@Table(name = "menu")
 @Entity
-public class Likes {
+public class Menu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cookieKey", nullable = false)
-    private String cookieKey;
+    @Column(name = "name", length = 15, nullable = false)
+    private String name;
+
+    @Column(name = "price", nullable = false)
+    private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booth_id")

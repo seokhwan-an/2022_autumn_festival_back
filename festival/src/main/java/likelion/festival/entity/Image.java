@@ -1,15 +1,16 @@
 package likelion.festival.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
+import likelion.festival.entity.booth.Booth;
+import likelion.festival.entity.notification.Notification;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Getter
-@Entity
 @NoArgsConstructor
+@Getter
+@Table(name = "image")
+@Entity
 public class Image {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,21 +23,12 @@ public class Image {
 
     private String storedFilePath;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notification_id")
     private Notification notification;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booth_id")
     private Booth booth;
 
-    @Builder
-    public Image(Long id, String originFileName, String serverFileName, String storedFilePath, Notification notification, Booth booth) {
-        this.id = id;
-        this.originFileName = originFileName;
-        this.serverFileName = serverFileName;
-        this.storedFilePath = storedFilePath;
-        this.notification = notification;
-        this.booth = booth;
-    }
 }
