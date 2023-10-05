@@ -1,7 +1,8 @@
-package likelion.festival.entity.comment;
+package likelion.festival.domain.comment;
 
-import likelion.festival.entity.BaseEntity;
-import likelion.festival.entity.booth.Booth;
+import likelion.festival.domain.BaseEntity;
+import likelion.festival.domain.booth.Booth;
+import likelion.festival.security.Encrypt;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,24 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booth_id")
     private Booth booth;
+
+    public Comment(final String writer,
+                   final String password,
+                   final String content,
+                   final Booth booth
+    ) {
+        this.id = null;
+        this.writer = writer;
+        this.password = password;
+        this.content = content;
+        this.booth = booth;
+    }
+
+    public boolean isCorrectPassword(final String inputPassword) {
+        return password.equals(Encrypt.getEncrypt(inputPassword));
+    }
+
+    public void delete() {
+        this.active = false;
+    }
 }

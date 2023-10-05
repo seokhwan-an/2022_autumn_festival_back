@@ -1,4 +1,4 @@
-package likelion.festival.entity;
+package likelion.festival.domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,6 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(value = {AuditingEntityListener.class})
 public class BaseEntity {
