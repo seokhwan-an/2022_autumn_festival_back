@@ -1,6 +1,6 @@
-package likelion.festival.repository;
+package likelion.festival.domain.menu.repository;
 
-import likelion.festival.entity.Menu;
+import likelion.festival.domain.menu.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {

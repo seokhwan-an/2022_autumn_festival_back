@@ -1,6 +1,6 @@
-package likelion.festival.entity.menu;
+package likelion.festival.domain.menu;
 
-import likelion.festival.entity.booth.Booth;
+import likelion.festival.domain.booth.Booth;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,9 +20,21 @@ public class Menu {
     private String name;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    private long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booth_id")
     private Booth booth;
+
+    public Menu(final String name, final long price, final Booth booth) {
+        this.id = null;
+        this.name = name;
+        this.price = price;
+        this.booth = booth;
+    }
+
+    public void update(final String name, final long price) {
+        this.name = name;
+        this.price = price;
+    }
 }
