@@ -18,17 +18,17 @@ public class Comment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "writer", length = 10, nullable = false)
-    private String writer;
+    @Embedded
+    private Writer writer;
 
-    @Column(name = "password", length = 10, nullable = false)
-    private String password;
+    @Embedded
+    private Password password;
 
-    @Column(name = "content", length = 100, nullable = false)
-    private String content;
+    @Embedded
+    private Content content;
 
-    @Column(name = "active", nullable = false)
-    private Boolean active = true;
+    @Embedded
+    private Active active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booth_id")
@@ -40,9 +40,10 @@ public class Comment extends BaseEntity {
                    final Booth booth
     ) {
         this.id = null;
-        this.writer = writer;
-        this.password = password;
-        this.content = content;
+        this.writer = new Writer(writer);
+        this.password = new Password(password);
+        this.content = new Content(content);
+        this.active = new Active(true);
         this.booth = booth;
     }
 
@@ -51,6 +52,14 @@ public class Comment extends BaseEntity {
     }
 
     public void delete() {
-        this.active = false;
+        active.delete();
+    }
+
+    public String getWriter() {
+        return this.writer.getValue();
+    }
+
+    public String getContent() {
+        return this.content.getValue();
     }
 }
