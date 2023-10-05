@@ -1,8 +1,8 @@
 package likelion.festival.domain.booth;
 
+import likelion.festival.domain.comment.Comment;
 import likelion.festival.domain.image.Image;
 import likelion.festival.domain.like.Likes;
-import likelion.festival.domain.comment.Comment;
 import likelion.festival.domain.menu.Menu;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,23 +23,23 @@ public class Booth {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", length = 100, nullable = false)
-    private String title;
+    @Embedded
+    private Title title;
 
-    @Column(name = "introdction", length = 100, nullable = false)
-    private String introduction;
+    @Embedded
+    private Introduction introduction;
 
-    @Column(name = "content", length = 10000, nullable = false)
-    private String content;
+    @Embedded
+    private Content content;
 
-    @Column(name = "notice", length = 100, nullable = false)
-    private String notice;
+    @Embedded
+    private Notice notice;
 
     @Enumerated(EnumType.STRING)
     private BoothType boothType;
 
-    @Column(name = "location", length = 100, nullable = false)
-    private String location;
+    @Embedded
+    private Location location;
 
     private LocalDate startAt;
 
@@ -67,12 +67,12 @@ public class Booth {
                  final LocalDate endAt
     ) {
         this.id = null;
-        this.title = title;
-        this.introduction = introduction;
-        this.content = content;
-        this.notice = notice;
+        this.title = new Title(title);
+        this.introduction = new Introduction(introduction);
+        this.content = new Content(content);
+        this.notice = new Notice(notice);
         this.boothType = boothType;
-        this.location = location;
+        this.location = new Location(location);
         this.startAt = startAt;
         this.endAt = endAt;
     }
@@ -81,6 +81,26 @@ public class Booth {
         return startAt.isBefore(today) && endAt.isAfter(today)
                 || startAt.isEqual(today)
                 || endAt.isEqual(today);
+    }
+
+    public String getTitle() {
+        return this.title.getValue();
+    }
+
+    public String getIntroduction() {
+        return this.introduction.getValue();
+    }
+
+    public String getContent() {
+        return this.content.getValue();
+    }
+
+    public String getNotice() {
+        return this.notice.getValue();
+    }
+
+    public String getLocation() {
+        return this.location.getValue();
     }
 
     public int getLikeCount() {
