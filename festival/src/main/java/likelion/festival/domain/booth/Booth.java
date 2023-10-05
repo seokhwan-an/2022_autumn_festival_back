@@ -1,9 +1,9 @@
-package likelion.festival.entity.booth;
+package likelion.festival.domain.booth;
 
-import likelion.festival.entity.Image;
-import likelion.festival.entity.Likes;
-import likelion.festival.entity.comment.Comment;
-import likelion.festival.entity.menu.Menu;
+import likelion.festival.domain.image.Image;
+import likelion.festival.domain.like.Likes;
+import likelion.festival.domain.comment.Comment;
+import likelion.festival.domain.menu.Menu;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,4 +56,34 @@ public class Booth {
 
     @OneToMany(mappedBy = "booth")
     private List<Image> images = new ArrayList<>();
+
+    public Booth(final String title,
+                 final String introduction,
+                 final String content,
+                 final String notice,
+                 final BoothType boothType,
+                 final String location,
+                 final LocalDate startAt,
+                 final LocalDate endAt
+    ) {
+        this.id = null;
+        this.title = title;
+        this.introduction = introduction;
+        this.content = content;
+        this.notice = notice;
+        this.boothType = boothType;
+        this.location = location;
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
+
+    public boolean isActive(final LocalDate today) {
+        return startAt.isBefore(today) && endAt.isAfter(today)
+                || startAt.isEqual(today)
+                || endAt.isEqual(today);
+    }
+
+    public int getLikeCount() {
+        return likes.size();
+    }
 }
