@@ -16,11 +16,11 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 15, nullable = false)
-    private String name;
+    @Embedded
+    private Name name;
 
-    @Column(name = "price", nullable = false)
-    private long price;
+    @Embedded
+    private Price price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booth_id")
@@ -28,13 +28,21 @@ public class Menu {
 
     public Menu(final String name, final long price, final Booth booth) {
         this.id = null;
-        this.name = name;
-        this.price = price;
+        this.name = new Name(name);
+        this.price = new Price(price);
         this.booth = booth;
     }
 
     public void update(final String name, final long price) {
-        this.name = name;
-        this.price = price;
+        this.name = new Name(name);
+        this.price = new Price(price);
+    }
+
+    public String getName() {
+        return this.name.getValue();
+    }
+
+    public long getPrice() {
+        return this.price.getValue();
     }
 }
