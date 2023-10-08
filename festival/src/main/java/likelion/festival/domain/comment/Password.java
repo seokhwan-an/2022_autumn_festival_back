@@ -20,7 +20,7 @@ public class Password {
     private static final int MAX_PASSWORD_LENGTH = 10;
     private static final Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d).+$");
 
-    @Column(name = "content", length = 100, nullable = false)
+    @Column(name = "password", length = 100, nullable = false)
     private String value;
 
     public Password(final String value) {

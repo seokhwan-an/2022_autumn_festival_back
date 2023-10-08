@@ -11,7 +11,7 @@ public class MenuResponse {
 
     private String name;
 
-    private Long price;
+    private int price;
 
     public MenuResponse(final Menu menu) {
         this.id = menu.getId();

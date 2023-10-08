@@ -26,14 +26,14 @@ public class Menu {
     @JoinColumn(name = "booth_id")
     private Booth booth;
 
-    public Menu(final String name, final long price, final Booth booth) {
+    public Menu(final String name, final int price, final Booth booth) {
         this.id = null;
         this.name = new Name(name);
         this.price = new Price(price);
         this.booth = booth;
     }
 
-    public void update(final String name, final long price) {
+    public void update(final String name, final int price) {
         this.name = new Name(name);
         this.price = new Price(price);
     }
@@ -42,7 +42,7 @@ public class Menu {
         return this.name.getValue();
     }
 
-    public long getPrice() {
+    public int getPrice() {
         return this.price.getValue();
     }
 }

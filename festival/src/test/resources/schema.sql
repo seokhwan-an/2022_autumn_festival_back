@@ -10,7 +10,7 @@ create table if not exists booth
     start_at     date,
     end_at       date,
     primary key (id)
-);
+    );
 
 create table if not exists comment
 (
@@ -24,7 +24,7 @@ create table if not exists comment
     modified_date_time datetime(6),
     primary key (id),
     foreign key (booth_id) references booth (id)
-);
+    );
 
 create table if not exists notification
 (
@@ -36,7 +36,7 @@ create table if not exists notification
     created_date_time  datetime(6),
     modified_date_time datetime(6),
     primary key (id)
-);
+    );
 
 create table if not exists image
 (
@@ -49,7 +49,7 @@ create table if not exists image
     primary key (id),
     foreign key (booth_id) references booth (id),
     foreign key (notification_id) references notification (id)
-);
+    );
 
 create table if not exists likes
 (
@@ -58,14 +58,14 @@ create table if not exists likes
     booth_id   bigint,
     primary key (id),
     foreign key (booth_id) references booth (id)
-);
+    );
 
 create table if not exists menu
 (
     id       bigint      not null auto_increment,
     name     varchar(15) not null,
-    price    integer     not null,
+    price    integer      not null,
     booth_id bigint,
     primary key (id),
     foreign key (booth_id) references booth (id)
-);
+    );

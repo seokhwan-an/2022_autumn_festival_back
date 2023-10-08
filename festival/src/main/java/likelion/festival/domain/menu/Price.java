@@ -18,14 +18,14 @@ public class Price {
     private static final int MAX_PRICE = 50_000;
 
     @Column(name = "price", nullable = false)
-    private long value;
+    private int value;
 
-    public Price(long value) {
+    public Price(int value) {
         validatePrice(value);
         this.value = value;
     }
 
-    public void validatePrice(final long value) {
+    public void validatePrice(final int value) {
         if (value < MIN_PRICE || value > MAX_PRICE) {
             throw new IllegalArgumentException(String.format("메뉴 가격은 %d보다 크고 %d보다 작아야 합니다", MIN_PRICE, MAX_PRICE));
         }

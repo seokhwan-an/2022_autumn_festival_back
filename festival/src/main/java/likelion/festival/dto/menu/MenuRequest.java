@@ -8,5 +8,5 @@ public class MenuRequest {
 
     private String name;
 
-    private Long price;
+    private Integer price;
 }
