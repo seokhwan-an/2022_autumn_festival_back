@@ -1,6 +1,6 @@
-package likelion.festival.domain.comment;
+package likelion.festival.domain.notification;
 
-import likelion.festival.domain.booth.Location;
+import likelion.festival.domain.comment.Writer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +19,7 @@ class WriterTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> new Writer(writer))
+        assertThatThrownBy(() -> new likelion.festival.domain.comment.Writer(writer))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
