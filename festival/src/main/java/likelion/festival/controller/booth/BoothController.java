@@ -1,15 +1,15 @@
 package likelion.festival.controller.booth;
 
+import likelion.festival.domain.booth.Booth;
 import likelion.festival.dto.booth.BoothDayLocationResponse;
-import likelion.festival.dto.booth.BoothResponse;
 import likelion.festival.dto.booth.BoothRequest;
+import likelion.festival.dto.booth.BoothResponse;
 import likelion.festival.dto.comment.CommentCreateRequest;
 import likelion.festival.dto.comment.CommentResponse;
 import likelion.festival.dto.like.LikesValueDto;
 import likelion.festival.dto.menu.MenuRequest;
 import likelion.festival.dto.menu.MenuResponse;
-import likelion.festival.domain.booth.Booth;
-import likelion.festival.service.*;
+import likelion.festival.service.ImageService;
 import likelion.festival.service.booth.BoothService;
 import likelion.festival.service.comment.CommentService;
 import likelion.festival.service.like.LikesService;
@@ -37,23 +37,26 @@ public class BoothController {
     private final ImageService imageService;
 
     @GetMapping(params = {"filter"})
-    public List<BoothResponse> boothFilter(HttpServletRequest request, @RequestParam String filter) {
-        return boothService.boothFilterAndSearch(request, filter);
+    public List<BoothResponse> boothFilter(final HttpServletRequest request, @RequestParam final String filter) {
+        final Cookie[] cookies = request.getCookies();
+        return boothService.boothFilterAndSearch(cookies, filter);
     }
 
     @GetMapping("/top5")
-    public List<BoothResponse> boothTopFive(HttpServletRequest request) {
-        return boothService.boothTopFive(request);
+    public List<BoothResponse> boothTopFive(final HttpServletRequest request) {
+        final Cookie[] cookies = request.getCookies();
+        return boothService.boothTopFive(cookies);
     }
 
     @GetMapping
-    public List<BoothDayLocationResponse> boothDayLocation(HttpServletRequest request, @RequestParam String location) {
-        return boothService.boothDayLocation(request, location);
+    public List<BoothDayLocationResponse> boothDayLocation(final HttpServletRequest request, @RequestParam final String location) {
+        final Cookie[] cookies = request.getCookies();
+        return boothService.boothDayLocation(cookies, location);
     }
 
     @PostMapping()
-    public Integer boothCreate(@RequestPart(value = "imgList", required = false) List<MultipartFile> imgList,
-                               @RequestBody BoothRequest request) {
+    public Integer boothCreate(@RequestPart(value = "imgList", required = false) final List<MultipartFile> imgList,
+                               @RequestBody final BoothRequest request) {
         Booth booth = boothService.create(request);
         if (imgList == null) {
             return HttpStatus.OK.value();
@@ -63,13 +66,15 @@ public class BoothController {
     }
 
     @GetMapping("{id}")
-    public BoothResponse boothRead(HttpServletRequest request, @PathVariable Long id) {
-        return boothService.read(request, id);
+    public BoothResponse boothRead(final HttpServletRequest request, @PathVariable final Long id) {
+        final Cookie[] cookies = request.getCookies();
+        return boothService.read(cookies, id);
     }
 
     @PostMapping("/{id}/likes")
-    public LikesValueDto likeCreate(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-        Optional<Cookie> boothCookie = likesService.findBoothCookie(request, id);
+    public LikesValueDto likeCreate(@PathVariable final Long id, final HttpServletRequest request, final HttpServletResponse response) {
+        final Cookie[] cookies = request.getCookies();
+        Optional<Cookie> boothCookie = likesService.findBoothCookie(cookies, id);
         if (boothCookie.isPresent()) {
             throw new IllegalArgumentException("이미 쿠키 있음");
         }
@@ -82,40 +87,41 @@ public class BoothController {
     }
 
     @DeleteMapping("/{id}/likes")
-    public String likeDelete(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-        Optional<Cookie> boothCookie = likesService.findBoothCookie(request, id);
-        if (boothCookie.isPresent()) {
-            Cookie userCookie = boothCookie.get();
-            String cookieKey = userCookie.getValue();
-            likesService.delete(id, cookieKey);
-
-            Cookie keyCookie = new Cookie(id.toString(), null);
-            keyCookie.setMaxAge(0);
-            keyCookie.setPath("/");
-            response.addCookie(keyCookie);
-        } else {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    public String likeDelete(@PathVariable final Long id, final HttpServletRequest request, final HttpServletResponse response) {
+        final Cookie[] cookies = request.getCookies();
+        Optional<Cookie> boothCookie = likesService.findBoothCookie(cookies, id);
+        if (boothCookie.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 쿠키입니다.");
         }
+        Cookie userCookie = boothCookie.get();
+        String cookieKey = userCookie.getValue();
+        likesService.delete(id, cookieKey);
+
+        Cookie keyCookie = new Cookie(String.valueOf(id), null);
+        keyCookie.setMaxAge(0);
+        keyCookie.setPath("/");
+        response.addCookie(keyCookie);
+
         return "Ok";
     }
 
     @PostMapping("{id}/comments")
-    public CommentResponse createComment(@PathVariable Long id, @RequestBody CommentCreateRequest commentCreateRequest, HttpServletRequest request) {
+    public CommentResponse createComment(@PathVariable final Long id, @RequestBody final CommentCreateRequest commentCreateRequest) {
         return commentService.create(id, commentCreateRequest);
     }
 
     @GetMapping("{id}/comments")
-    public List<CommentResponse> getCommentList(@PathVariable Long id) {
+    public List<CommentResponse> getCommentList(@PathVariable final Long id) {
         return commentService.getAll(id);
     }
 
     @GetMapping("{id}/menus")
-    public List<MenuResponse> getMenuList(@PathVariable Long id) {
+    public List<MenuResponse> getMenuList(@PathVariable final Long id) {
         return menuService.getAll(id);
     }
 
     @PostMapping("{id}/menus")
-    public MenuResponse createMenu(@PathVariable Long id, @RequestBody MenuRequest menuRequest) {
+    public MenuResponse createMenu(@PathVariable final Long id, @RequestBody final MenuRequest menuRequest) {
         return menuService.create(id, menuRequest);
     }
 }

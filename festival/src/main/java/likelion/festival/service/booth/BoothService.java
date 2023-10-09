@@ -29,7 +29,7 @@ public class BoothService {
     private final BoothRepository boothRepository;
     private final LikesService likesService;
 
-    public List<BoothResponse> boothFilterAndSearch(final HttpServletRequest request, final String search) {
+    public List<BoothResponse> boothFilterAndSearch(final Cookie[] cookies, final String search) {
         List<Booth> booths = boothRepository.findByTitle(search);
         if (booths.isEmpty()) {
             booths = boothRepository.findByLocation(search);
@@ -38,27 +38,27 @@ public class BoothService {
             booths = boothRepository.findByMenusName(search);
         }
         return booths.stream()
-                .map(booth -> new BoothResponse(booth, checkIsLike(request, booth.getId())))
+                .map(booth -> new BoothResponse(booth, checkIsLike(cookies, booth.getId())))
                 .collect(Collectors.toList());
     }
 
-    public List<BoothResponse> boothTopFive(final HttpServletRequest request) {
+    public List<BoothResponse> boothTopFive(final Cookie[] cookies) {
         final List<Booth> booths = boothRepository.findAll();
         return booths.stream()
                 .filter(booth -> booth.isActive(LocalDate.now()))
                 .sorted(Comparator.comparing(Booth::getLikeCount).reversed())
                 .limit(5)
-                .map(booth -> new BoothResponse(booth, checkIsLike(request, booth.getId())))
+                .map(booth -> new BoothResponse(booth, checkIsLike(cookies, booth.getId())))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     //날짜와 장소로 필터링 하는 기능 ok
-    public List<BoothDayLocationResponse> boothDayLocation(HttpServletRequest request, String location) {
+    public List<BoothDayLocationResponse> boothDayLocation(final Cookie[] cookies, String location) {
         LocalDate today = LocalDate.now();
         List<Booth> booths = boothRepository.findByLocation(location);
         return booths.stream()
                 .filter(booth -> booth.isActive(today))
-                .map(booth -> new BoothDayLocationResponse(booth, checkIsLike(request, booth.getId())))
+                .map(booth -> new BoothDayLocationResponse(booth, checkIsLike(cookies, booth.getId())))
                 .collect(Collectors.toList());
     }
 
@@ -78,14 +78,14 @@ public class BoothService {
     }
 
     //읽기 ok
-    public BoothResponse read(final HttpServletRequest request, final Long id) {
+    public BoothResponse read(final Cookie[] cookies, final Long id) {
         final Booth booth = boothRepository.findById(id)
                 .orElseThrow(WrongBoothId::new);
-        return new BoothResponse(booth, checkIsLike(request, id));
+        return new BoothResponse(booth, checkIsLike(cookies, id));
     }
 
-    private Boolean checkIsLike(HttpServletRequest request, Long id) {
-        Optional<Cookie> boothCookie = likesService.findBoothCookie(request, id);
+    private Boolean checkIsLike(final Cookie[] cookies, Long id) {
+        Optional<Cookie> boothCookie = likesService.findBoothCookie(cookies, id);
         return boothCookie.isPresent();
     }
 }

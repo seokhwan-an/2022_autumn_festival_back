@@ -1,17 +1,16 @@
 package likelion.festival.service.like;
 
-import likelion.festival.dto.like.LikesValueDto;
-import likelion.festival.domain.like.Likes;
 import likelion.festival.domain.booth.Booth;
+import likelion.festival.domain.booth.repository.BoothRepository;
+import likelion.festival.domain.like.Likes;
+import likelion.festival.domain.like.repository.LikesRepository;
+import likelion.festival.dto.like.LikesValueDto;
 import likelion.festival.exception.WrongBoothId;
 import likelion.festival.exception.WrongLikesKey;
-import likelion.festival.domain.booth.repository.BoothRepository;
-import likelion.festival.domain.like.repository.LikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,13 +54,12 @@ public class LikesService {
         }
     }
 
-    public Optional<Cookie> findBoothCookie(HttpServletRequest request, Long id) {
-        Cookie[] userCookies = request.getCookies();
-        if (userCookies == null) {
+    public Optional<Cookie> findBoothCookie(final Cookie[] cookies, final Long boothId) {
+        if (cookies == null) {
             return Optional.empty();
         }
-        return Arrays.stream(userCookies)
-                .filter(cookie -> cookie.getName().equals(String.valueOf(id)))
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(String.valueOf(boothId)))
                 .findFirst();
     }
 }
