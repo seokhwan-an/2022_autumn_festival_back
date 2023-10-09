@@ -2,7 +2,6 @@ package likelion.festival.domain.comment;
 
 import likelion.festival.domain.BaseEntity;
 import likelion.festival.domain.booth.Booth;
-import likelion.festival.security.Encrypt;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,8 +46,8 @@ public class Comment extends BaseEntity {
         this.booth = booth;
     }
 
-    public boolean isCorrectPassword(final String inputPassword) {
-        return password.equals(Encrypt.getEncrypt(inputPassword));
+    public boolean isSamePassword(final String inputPassword) {
+        return this.password.isSamePassword(inputPassword);
     }
 
     public void delete() {
@@ -61,5 +60,9 @@ public class Comment extends BaseEntity {
 
     public String getContent() {
         return this.content.getValue();
+    }
+
+    public boolean getActive() {
+        return this.active.getValue();
     }
 }

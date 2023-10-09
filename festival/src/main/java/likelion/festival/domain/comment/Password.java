@@ -1,5 +1,6 @@
 package likelion.festival.domain.comment;
 
+import likelion.festival.security.Encrypt;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 @Embeddable
 public class Password {
 
-    private static final int MAX_PASSWORD_LENGTH = 10;
+    private static final int MAX_PASSWORD_LENGTH = 100;
     private static final Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d).+$");
 
     @Column(name = "password", length = 100, nullable = false)
@@ -33,11 +34,15 @@ public class Password {
             throw new IllegalArgumentException("비밀번호는 null이나 빈 값이 될 수 없습니다.");
         }
         if (value.length() > MAX_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("비밀번호는 10000자를 넘길 수 없습니다.");
+            throw new IllegalArgumentException("비밀번호는 100자를 넘길 수 없습니다.");
         }
         final Matcher matcher = pattern.matcher(value);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("비밀번호는 최소하나의 영문자와 숫자로 구성되어야 합니다.");
         }
+    }
+
+    public boolean isSamePassword(final String inputPassword) {
+        return this.value.equals(Encrypt.getEncrypt(inputPassword));
     }
 }

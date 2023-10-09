@@ -17,7 +17,7 @@ create table if not exists comment
     id                 bigint       not null auto_increment,
     content            varchar(100) not null,
     writer             varchar(10)  not null,
-    password           varchar(10)  not null,
+    password           varchar(100)  not null,
     active             boolean,
     booth_id           bigint,
     created_date_time  datetime(6),

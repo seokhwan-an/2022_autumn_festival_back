@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
-public class CommentResponseDto {
+public class CommentResponse {
 
     private Long id;
 
@@ -15,13 +15,13 @@ public class CommentResponseDto {
 
     private String content;
 
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createdAt;
 
-    public CommentResponseDto(final Comment comment) {
+    public CommentResponse(final Comment comment) {
         this.id = comment.getId();
         this.writer = comment.getWriter();
         this.content = comment.getContent();
-        this.createdDateTime = comment.getCreatedDateTime();
+        this.createdAt = comment.getCreatedDateTime();
     }
 
 }

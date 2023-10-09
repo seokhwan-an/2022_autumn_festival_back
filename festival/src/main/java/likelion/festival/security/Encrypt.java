@@ -9,14 +9,14 @@ import java.security.SecureRandom;
 @Component
 public class Encrypt {
 
-    public static String getEncrypt(String pwd){
+    public static String getEncrypt(final String pwd){
         StringBuilder sb = new StringBuilder();
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update((pwd).getBytes());
-            byte[] pwsalt = md.digest();
+            byte[] pwSalt = md.digest();
 
-            for (byte b : pwsalt) {
+            for (byte b : pwSalt) {
                 sb.append(String.format("%02x",b));
             }
         }catch (NoSuchAlgorithmException e){

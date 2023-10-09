@@ -4,7 +4,7 @@ import likelion.festival.dto.booth.BoothDayLocationResponse;
 import likelion.festival.dto.booth.BoothResponse;
 import likelion.festival.dto.booth.BoothRequest;
 import likelion.festival.dto.comment.CommentCreateRequest;
-import likelion.festival.dto.comment.CommentResponseDto;
+import likelion.festival.dto.comment.CommentResponse;
 import likelion.festival.dto.like.LikesValueDto;
 import likelion.festival.dto.menu.MenuRequest;
 import likelion.festival.dto.menu.MenuResponse;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@RequestMapping(value = "/booths")
+@RequestMapping(value = "/api/booths")
 @RestController
 public class BoothController {
 
@@ -100,12 +100,12 @@ public class BoothController {
     }
 
     @PostMapping("{id}/comments")
-    public CommentResponseDto createComment(@PathVariable Long id, @RequestBody CommentCreateRequest commentCreateRequest, HttpServletRequest request) {
+    public CommentResponse createComment(@PathVariable Long id, @RequestBody CommentCreateRequest commentCreateRequest, HttpServletRequest request) {
         return commentService.create(id, commentCreateRequest);
     }
 
     @GetMapping("{id}/comments")
-    public List<CommentResponseDto> getCommentList(@PathVariable Long id) {
+    public List<CommentResponse> getCommentList(@PathVariable Long id) {
         return commentService.getAll(id);
     }
 
