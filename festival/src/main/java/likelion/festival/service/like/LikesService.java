@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +20,7 @@ public class LikesService {
 
     private final LikesRepository likesRepository;
     private final BoothRepository boothRepository;
+    private final UniqueKeyMaker uniqueKeyMaker;
 
     public LikesValueDto create(final Long id) {
         final Booth booth = boothRepository.findById(id)
@@ -33,20 +33,17 @@ public class LikesService {
     }
 
     public void delete(final Long boothId, final String cookieKey) {
-        Optional<Booth> booth = boothRepository.findById(boothId);
-        if (booth.isEmpty()) {
-            throw new WrongBoothId();
-        }
-        Optional<Likes> likes = likesRepository.findByCookieKey(cookieKey);
-        if (likes.isEmpty()) {
-            throw new WrongLikesKey();
-        }
-        likesRepository.deleteById(likes.get().getId());
+        boothRepository.findById(boothId)
+                .orElseThrow(WrongBoothId::new);
+        final Likes likes = likesRepository.findByCookieKey(cookieKey)
+                .orElseThrow(WrongLikesKey::new);
+
+        likesRepository.deleteById(likes.getId());
     }
 
     private String createCookieKey() {
         while (true) {
-            final String cookieKey = String.valueOf(UUID.randomUUID());
+            final String cookieKey = uniqueKeyMaker.generate();
             Optional<Likes> likes = likesRepository.findByCookieKey(cookieKey);
             if (likes.isEmpty()) {
                 return cookieKey;
