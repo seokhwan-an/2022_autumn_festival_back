@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class NotificationService {
 
     public List<NotificationResponse> getNotificationsByType(final String notificationType) {
         List<Notification> notifications = notificationRepository.findAll();
-        if (notificationType == null) {
+        if (Objects.isNull(notificationType)) {
             return notifications.stream()
                     .map(NotificationResponse::new)
                     .collect(Collectors.toUnmodifiableList());

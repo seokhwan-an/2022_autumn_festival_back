@@ -4,12 +4,15 @@ import likelion.festival.domain.image.Image;
 import likelion.festival.domain.notification.Notification;
 import likelion.festival.domain.notification.NotificationType;
 import likelion.festival.dto.image.ImageResponse;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@AllArgsConstructor
+@Getter
 public class NotificationResponse {
 
     private Long id;
@@ -22,9 +25,9 @@ public class NotificationResponse {
 
     private NotificationType notificationType;
 
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime modifiedDateTime;
+    private LocalDateTime modifiedAt;
 
     private List<ImageResponse> images;
 
@@ -34,8 +37,8 @@ public class NotificationResponse {
         this.writer = notification.getWriter();
         this.content = notification.getContent();
         this.notificationType = notification.getNotificationType();
-        this.createdDateTime = notification.getCreatedDateTime();
-        this.modifiedDateTime = notification.getModifiedDateTime();
+        this.createdAt = notification.getCreatedDateTime();
+        this.modifiedAt = notification.getModifiedDateTime();
     }
 
 }
